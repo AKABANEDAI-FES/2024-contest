@@ -10,23 +10,37 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import environ
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# env = environ.Env(
+# DEBUG=(bool, False)
+# )
+
+# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t8xfvo^!gl=-itlsjpg!%)@=#a+8a0s0!izda-!d^!y8h%kbgu'
+
+# SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = 'django-insecure-xcx(&9*(=hdb671zs7+^hhft@90(823^8&93+mlr^++%@#kegi'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = env('DEBUG')
 DEBUG = True
 
+# ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 ALLOWED_HOSTS = []
 
+# CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
+
+# SECURE_PROXY_SSEL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
@@ -37,6 +51,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'django_filters',
+    'sslserver',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -75,6 +93,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
+        #'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        #'NAME': env('DB_NAME'),
+        #'USER': env('DB_USERNAME'),
+        #'PASSWORD': env('DB_PASSWORD'),
+        #'HOST': 'db',
+        #'PORT': 5432,
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
@@ -103,9 +127,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
@@ -116,8 +140,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+# STATIC_ROOT = os.environ.get('STATIC_ROOT')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}

@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+    db:
+        restart: always
+        image: postgres
+        environment:
+            - "POSTGRES_USER=postgres"
+            - "POSTGRES_PASSWORD=password"
+
+    gunicorn:
+        build: .
+        restart: always
+        env_file:
+            - ".env"
+        image: gunicorn:20.1.0
+        container_name: gunicorn
+        depends_on:
+            - db
+        volumes:
+            - .:/usr/src/app/
+            - gunicorn:/var/run/gunicorn
+            - static:$STATIC_ROOT
+
+    nginx:
+        restart: always
+        env_file:
+            - ".env"
+        image: nginx:1.17.7
+        container_name: nginx
+        depends_on:
+            - gunicorn
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./gunicorn.conf:/etc/nginx/conf.d/default.conf
+            - /etc/letsencrypt:/etc/letsencrypt
+            - gunicorn:/var/run/gunicorn
+            - static:$STATIC_ROOT
+
+volumes:
+    gunicorn:
+        driver: local
+    static:
+        driver: local
