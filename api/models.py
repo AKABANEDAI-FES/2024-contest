@@ -8,7 +8,7 @@ class Category(models.Model):
     title = models.CharField(max_length=50) # example 食品部門
 
 class Plan(models.Model):
-    plan_id = models.BigAutoField(primary_key=True)
+    plan_id = models.IntegerField(primary_key=True)
     # 3~4 digit xxyy
     # xx = 1~2digit page number
     # yy = 2digit Plan number 
