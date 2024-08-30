@@ -25,38 +25,6 @@ class VoterCheck_serializer(serializers.Serializer):
             rslt.append(latest_vote.vote_log.plan.pk)
         return rslt
     
-class Totalling_serializer(serializers.ModelSerializer):
-    count = serializers.IntegerField()
-
-    class Meta:
-        model = Latest_vote
-        fields = '__all__'
-    
-class Voter_serializer(serializers.ModelSerializer):
-    class Meta:
-        model = Voter
-        fields = '__all__'
-    
-class VoteLog_serializer(serializers.ModelSerializer):
-    class Meta:
-        model = Vote_log
-        fields = '__all__'
-
-class LatestVote_serializer(serializers.ModelSerializer):
-    class Meta:
-        model = Latest_vote
-        fields = '__all__'
-
-class Category_serializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
-
-class Plan_serializer(serializers.ModelSerializer):
-    class Meta:
-        model = Plan
-        fields = '__all__'
-
 class PlanVote_serializer(serializers.ModelSerializer):
     vote_count = serializers.IntegerField()
 
@@ -84,3 +52,29 @@ class Totalling_serializer(serializers.ModelSerializer):
             })
 
         return PlanVote_serializer(serialized_plans, many=True).data
+
+    
+class Voter_serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Voter
+        fields = '__all__'
+    
+class VoteLog_serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vote_log
+        fields = '__all__'
+
+class LatestVote_serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Latest_vote
+        fields = '__all__'
+
+class Category_serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+class Plan_serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = '__all__'
