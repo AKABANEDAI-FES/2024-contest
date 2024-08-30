@@ -1,15 +1,15 @@
-from .models import Voters, Plans, Category, Vote_logs, Latest_votes
+from .models import Voter, Plan, Category, Vote_log, Latest_vote
 from rest_framework import viewsets, views
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .serializers import VotersCheck_serializer, VoteLogs_serializer, Category_serializer, Plans_serializer, Voters_serializer, LatestVotes_serializer
+from .serializers import VoterCheck_serializer, VoteLog_serializer, Category_serializer, Plan_serializer, Voter_serializer, LatestVote_serializer
 
-class VotersView(views.APIView):
+class VoterView(views.APIView):
     def get(self, request, *args, **kwargs):
-        req = {"user_id":self.kwargs["pk"]}
-        return Response(VotersCheck_serializer(req).data)
+        req = {"user_id":self.request.query_params.get('user_id')}
+        return Response(VoterCheck_serializer(req).data)
     def post(self, request, *args, **kwargs):
-        serializer = Voters_serializer(data=request.data)
+        serializer = Voter_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({'result':True})
@@ -24,30 +24,30 @@ class VoteView(views.APIView):
             "valid_vote":False,
             "valid_plans":[]
         }
-        if Voters.objects.filter(user_id=request.data["user_id"]).exists():
+        if Voter.objects.filter(user_id=request.data["user_id"]).exists():
             response_data["valid_vote"] = True
             i=1
             for id in request.data["plans"]:
-                log_serializer = VoteLogs_serializer(data={
-                    "user_id":request.data["user_id"],
-                    "plan_id":id
+                log_serializer = VoteLog_serializer(data={
+                    "user":request.data["user_id"],
+                    "plan":id
                 })
                 if log_serializer.is_valid():
                     log_serializer.save()
-                    new_log = Vote_logs.objects.filter(user_id=request.data["user_id"],plan_id=id).order_by('-created_at')[0]
-                    if Latest_votes.objects.filter(user_id=request.data["user_id"], number=i).exists():
-                        latest_serializer = LatestVotes_serializer(
-                            Latest_votes.objects.filter(user_id=request.data["user_id"], number=i)[0],
+                    new_log = Vote_log.objects.filter(user_id=request.data["user_id"],plan_id=id).order_by('-created_at')[0]
+                    if Latest_vote.objects.filter(user_id=request.data["user_id"], number=i).exists():
+                        latest_serializer = LatestVote_serializer(
+                            Latest_vote.objects.filter(user_id=request.data["user_id"], number=i)[0],
                             data={
-                                "user_id":request.data["user_id"],
-                                "vote_logs_id":new_log.pk,
+                                "user":request.data["user_id"],
+                                "vote_log":new_log.pk,
                                 "number":i
                             })
                     else:
-                        latest_serializer = LatestVotes_serializer(
+                        latest_serializer = LatestVote_serializer(
                             data={
-                                "user_id":request.data["user_id"],
-                                "vote_logs_id":new_log.pk,
+                                "user":request.data["user_id"],
+                                "vote_log":new_log.pk,
                                 "number":i
                             })
                     if latest_serializer.is_valid():
@@ -68,27 +68,27 @@ class VoteView(views.APIView):
             response_data["comment"] = "unvalid_voter error"
         return Response(response_data)
         
-class StuffCategoryViewSet(viewsets.ModelViewSet):
+class StaffCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = Category_serializer
     queryset = Category.objects.all()
     permission_classes = [IsAuthenticated]
 
-class StuffPlansViewSet(viewsets.ModelViewSet):
-    serializer_class = Plans_serializer
-    queryset = Plans.objects.all()
+class StaffPlanViewSet(viewsets.ModelViewSet):
+    serializer_class = Plan_serializer
+    queryset = Plan.objects.all()
     permission_classes = [IsAuthenticated]
 
-class StuffVotersViewSet(viewsets.ModelViewSet):
-    serializer_class = Voters_serializer
-    queryset = Voters.objects.all()
+class StaffVoterViewSet(viewsets.ModelViewSet):
+    serializer_class = Voter_serializer
+    queryset = Voter.objects.all()
     permission_classes = [IsAuthenticated]
 
-class StuffVoteLogsViewSet(viewsets.ModelViewSet):
-    serializer_class = VoteLogs_serializer
-    queryset = Vote_logs.objects.all()
+class StaffVoteLogViewSet(viewsets.ModelViewSet):
+    serializer_class = VoteLog_serializer
+    queryset = Vote_log.objects.all()
     permission_classes = [IsAuthenticated]
 
-class StuffLatestVotesViewSet(viewsets.ModelViewSet):
-    serializer_class = LatestVotes_serializer
-    queryset = Latest_votes.objects.all()
+class StaffLatestVoteViewSet(viewsets.ModelViewSet):
+    serializer_class = LatestVote_serializer
+    queryset = Latest_vote.objects.all()
     permission_classes = [IsAuthenticated]
