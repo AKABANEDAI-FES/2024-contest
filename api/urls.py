@@ -13,4 +13,5 @@ urlpatterns = [
     path("api/v1/", include(router.urls)),
     path("api/v1/voter/", apis.VoterView.as_view(), name="voter"),
     path('api/v1/vote/', apis.VoteView.as_view(), name="vote"),
+    path('api/v1/total/', apis.TotallingView.as_view(), name="total")
 ]

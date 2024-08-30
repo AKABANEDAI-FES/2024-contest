@@ -1,8 +1,10 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Voter, Plan, Category, Vote_log, Latest_vote
-from rest_framework import viewsets, views
+from django.db.models import Count
+from rest_framework import viewsets, views, filters, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .serializers import VoterCheck_serializer, VoteLog_serializer, Category_serializer, Plan_serializer, Voter_serializer, LatestVote_serializer
+from .serializers import VoterCheck_serializer, VoteLog_serializer, Category_serializer, Plan_serializer, Voter_serializer, LatestVote_serializer, Totalling_serializer
 
 class VoterView(views.APIView):
     def get(self, request, *args, **kwargs):
@@ -67,6 +69,10 @@ class VoteView(views.APIView):
         else:
             response_data["comment"] = "unvalid_voter error"
         return Response(response_data)
+
+class TotallingView(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = Totalling_serializer
         
 class StaffCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = Category_serializer
