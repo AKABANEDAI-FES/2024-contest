@@ -61,7 +61,7 @@ python manage.py createsuperuser
 
 ```
 開発環境であれば
-http:127.0.0.1:8000/admin/
+http://127.0.0.1:8000/admin/
 本番環境であれば
 https://ドメイン/admin/
 ```
