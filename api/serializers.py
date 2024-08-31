@@ -25,6 +25,35 @@ class VoterCheck_serializer(serializers.Serializer):
             rslt.append(latest_vote.vote_log.plan.pk)
         return rslt
     
+class PlanVote_serializer(serializers.ModelSerializer):
+    vote_count = serializers.IntegerField()
+
+    class Meta:
+        model = Plan
+        fields = ['plan_id', 'title', 'vote_count']
+
+class Totalling_serializer(serializers.ModelSerializer):
+    plans = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = ['category_id', 'title', 'plans']
+
+    def get_plans(self, obj):
+        plans = Plan.objects.filter(category=obj)
+        serialized_plans = []
+
+        for plan in plans:
+            vote_count = Latest_vote.objects.filter(vote_log__plan=plan).count()
+            serialized_plans.append({
+                'plan_id': plan.plan_id,
+                'title': plan.title,
+                'vote_count': vote_count
+            })
+
+        return PlanVote_serializer(serialized_plans, many=True).data
+
+    
 class Voter_serializer(serializers.ModelSerializer):
     class Meta:
         model = Voter
