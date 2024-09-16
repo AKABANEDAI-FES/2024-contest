@@ -3,11 +3,11 @@ from . import apis
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register('staff-category', apis.StaffCategoryViewSet)
-router.register('staff-plan', apis.StaffPlanViewSet)
-router.register('staff-voter', apis.StaffVoterViewSet)
-router.register('staff-votelog', apis.StaffVoteLogViewSet)
-router.register('staff-latestvote', apis.StaffLatestVoteViewSet)
+#router.register('staff-category', apis.StaffCategoryViewSet)
+#router.register('staff-plan', apis.StaffPlanViewSet)
+#router.register('staff-voter', apis.StaffVoterViewSet)
+#router.register('staff-votelog', apis.StaffVoteLogViewSet)
+#router.register('staff-latestvote', apis.StaffLatestVoteViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
