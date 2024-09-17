@@ -28,44 +28,46 @@ class VoteView(views.APIView):
         }
         if Voter.objects.filter(user_id=request.data["user_id"]).exists():
             response_data["valid_vote"] = True
-            i=1
-            for id in request.data["plans"]:
-                log_serializer = VoteLog_serializer(data={
-                    "user":request.data["user_id"],
-                    "plan":id
-                })
-                if log_serializer.is_valid():
-                    log_serializer.save()
-                    new_log = Vote_log.objects.filter(user_id=request.data["user_id"],plan_id=id).order_by('-created_at')[0]
-                    if Latest_vote.objects.filter(user_id=request.data["user_id"], number=i).exists():
-                        latest_serializer = LatestVote_serializer(
-                            Latest_vote.objects.filter(user_id=request.data["user_id"], number=i)[0],
-                            data={
-                                "user":request.data["user_id"],
-                                "vote_log":new_log.pk,
-                                "number":i
-                            })
+            if len(request.data["plans"]) == len(set(request.data["plans"])):
+                i=1
+                for id in request.data["plans"]:
+                    log_serializer = VoteLog_serializer(data={
+                        "user":request.data["user_id"],
+                        "plan":id
+                    })
+                    if log_serializer.is_valid():
+                        log_serializer.save()
+                        new_log = Vote_log.objects.filter(user_id=request.data["user_id"],plan_id=id).order_by('-created_at')[0]
+                        if Latest_vote.objects.filter(user_id=request.data["user_id"], number=i).exists():
+                            latest_serializer = LatestVote_serializer(
+                                Latest_vote.objects.filter(user_id=request.data["user_id"], number=i)[0],
+                                data={
+                                    "user":request.data["user_id"],
+                                    "vote_log":new_log.pk,
+                                    "number":i
+                                })
+                        else:
+                            latest_serializer = LatestVote_serializer(
+                                data={
+                                    "user":request.data["user_id"],
+                                    "vote_log":new_log.pk,
+                                    "number":i
+                                })
+                        if latest_serializer.is_valid():
+                            response_data["valid_plans"].append(True)
+                            latest_serializer.save()
+                        else:
+                            response_data["valid_plans"].append(False)
                     else:
-                        latest_serializer = LatestVote_serializer(
-                            data={
-                                "user":request.data["user_id"],
-                                "vote_log":new_log.pk,
-                                "number":i
-                            })
-                    if latest_serializer.is_valid():
-                        response_data["valid_plans"].append(True)
-                        latest_serializer.save()
-                    else:
-                        print(latest_serializer.errors)
                         response_data["valid_plans"].append(False)
+                    i+=1
+                if not all(response_data["valid_plans"]):
+                    response_data["comment"] = "unvalid_plan error"
                 else:
-                    print(log_serializer.errors)
-                    response_data["valid_plans"].append(False)
-                i+=1
-            if not all(response_data["valid_plans"]):
-                response_data["comment"] = "unvalid_plan error"
+                    response_data["succeed"] = True
             else:
-                response_data["succeed"] = True
+                response_data["comment"] = "duplicate_plan error"
+                response_data["valid_plans"] = [request.data["plans"].count(i) == 1 for i in request.data["plans"]]
         else:
             response_data["comment"] = "unvalid_voter error"
         return Response(response_data)
