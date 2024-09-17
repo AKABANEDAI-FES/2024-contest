@@ -2,9 +2,10 @@
 
 python manage.py makemigrations --noinput
 python manage.py migrate --noinput
-python manage.py makemigrations MediChat --noinput
+python manage.py makemigrations api --noinput
 python manage.py migrate --noinput
 python manage.py collectstatic --noinput --clear
+python manage.py createsuperuser --noinput
 
 if [ $DEBUG = "True"]
 then
