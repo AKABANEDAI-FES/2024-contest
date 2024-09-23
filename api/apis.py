@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from .serializers import VoterCheck_serializer, VoteLog_serializer, Category_serializer, Plan_serializer, Voter_serializer, LatestVote_serializer, Totalling_serializer
 
 class VoterView(views.APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         req = {"user_id":self.request.query_params.get('user_id')}
         return Response(VoterCheck_serializer(req).data)
@@ -19,6 +21,8 @@ class VoterView(views.APIView):
             return Response({'result':False})
     
 class VoteView(views.APIView):
+    permission_classes = [IsAuthenticated]
+    
     def post(self, request, *args, **kwargs):
         response_data = {
             "succeed":False,
@@ -75,6 +79,7 @@ class VoteView(views.APIView):
 class TotallingView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = Totalling_serializer
+    permission_classes = [IsAuthenticated]
         
 class StaffCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = Category_serializer
