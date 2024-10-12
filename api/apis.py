@@ -80,6 +80,11 @@ class TotallingView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = Totalling_serializer
     permission_classes = [IsAuthenticated]
+
+class PlanView(generics.ListAPIView):
+    queryset = Plan.objects.all()
+    serializer_class = Plan_serializer
+    permission_classes = [IsAuthenticated]
         
 class StaffCategoryViewSet(viewsets.ModelViewSet):
     serializer_class = Category_serializer

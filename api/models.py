@@ -23,6 +23,7 @@ class Plan(models.Model):
     # example leaflet 3page 15th Plan ==> 315
     # example leaflet 30page 5th Plan ==> 3005
     title = models.CharField(max_length=50) # example ARイニャー
+    group = models.CharField(max_length=50) # example 赤羽台祭実行委員会
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     class Meta:
        verbose_name_plural = "企画"
