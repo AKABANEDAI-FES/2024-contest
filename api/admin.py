@@ -8,7 +8,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('title',)
 
 class PlanAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'plan_id')
+    list_display = ('title', 'group', 'category', 'plan_id')
     list_filter = ('category',)
     search_fields = ('title',)
     ordering = ("plan_id", )

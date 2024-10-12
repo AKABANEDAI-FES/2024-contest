@@ -30,7 +30,7 @@ class PlanVote_serializer(serializers.ModelSerializer):
 
     class Meta:
         model = Plan
-        fields = ['plan_id', 'title', 'vote_count']
+        fields = ['plan_id', 'title', 'group', 'vote_count']
 
 class Totalling_serializer(serializers.ModelSerializer):
     plans = serializers.SerializerMethodField()
@@ -48,6 +48,7 @@ class Totalling_serializer(serializers.ModelSerializer):
             serialized_plans.append({
                 'plan_id': plan.plan_id,
                 'title': plan.title,
+                'group': plan.group,
                 'vote_count': vote_count
             })
 
