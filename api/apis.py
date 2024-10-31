@@ -19,6 +19,28 @@ class VoterView(views.APIView):
             return Response({'result':True})
         else:
             return Response({'result':False})
+
+class VoterPostCheckView(views.APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        error = []
+        added = []
+        result = True
+        for i in range(1,10001):
+            req = {"user_id":str(i)}
+            if VoterCheck_serializer(req).data["valied_vote"]:
+                continue
+            else:
+                result = False
+                serializer = Voter_serializer(data={"user_id":str(i)})
+                if serializer.is_valid():
+                    serializer.save()
+                    added.append(i)
+                else:
+                    error.append(i)
+                Response({'result':result, 'error':error, 'error_n':len(error), 'added':added, 'added_n':len(added)})
+        Response({'result':result, 'error':error, 'error_n':len(error), 'added':added, 'added_n':len(added)})
     
 class VoteView(views.APIView):
     permission_classes = [IsAuthenticated]
