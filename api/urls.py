@@ -13,6 +13,7 @@ urlpatterns = [
     path("", include(router.urls)),
     path("voter/", apis.VoterView.as_view(), name="voter"),
     path('vote/', apis.VoteView.as_view(), name="vote"),
+    path('voterpostcheck/', apis.VoterPostCheckView.as_view(), name="votepostcheck"),
     path('total/', apis.TotallingView.as_view(), name="total"),
     path('plan/', apis.PlanView.as_view(), name="plan")
 ]

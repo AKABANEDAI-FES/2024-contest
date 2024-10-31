@@ -39,8 +39,7 @@ class VoterPostCheckView(views.APIView):
                     added.append(i)
                 else:
                     error.append(i)
-                Response({'result':result, 'error':error, 'error_n':len(error), 'added':added, 'added_n':len(added)})
-        Response({'result':result, 'error':error, 'error_n':len(error), 'added':added, 'added_n':len(added)})
+        return Response({'result':result, 'error':error, 'error_n':len(error), 'added':added, 'added_n':len(added)})
     
 class VoteView(views.APIView):
     permission_classes = [IsAuthenticated]
